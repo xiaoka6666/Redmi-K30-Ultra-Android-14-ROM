@@ -1,0 +1,28 @@
+
+name: Sync AOSP Source
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync-aosp:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up ROM source directory
+      run: mkdir YOUR_ROM_SOURCE && cd YOUR_ROM_SOURCE
+
+    - name: Initialize repo
+      run: |
+        cd YOUR_ROM_SOURCE
+        repo init -u https://android.googlesource.com/platform/manifest -b android-14.0.0_r54 --git-lfs --depth=1
+
+    - name: Sync AOSP source
+      run: |
+        cd YOUR_ROM_SOURCE
+        repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
