@@ -35,3 +35,13 @@ jobs:
       run: |
         cd YOUR_ROM_SOURCE
         ~/.bin/repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+
+    - name: Archive ROM source
+      run: |
+        tar -czf YOUR_ROM_SOURCE.tar.gz YOUR_ROM_SOURCE
+
+    - name: Upload ROM source to repository
+      uses: actions/upload-artifact@v2
+      with:
+        name: YOUR_ROM_SOURCE
+        path: YOUR_ROM_SOURCE.tar.gz
