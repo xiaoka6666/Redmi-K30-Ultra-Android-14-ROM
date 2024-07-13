@@ -1,3 +1,4 @@
+cat > .github/workflows/sync-aosp.yml << 'EOF'
 name: Sync AOSP Source
 
 on:
@@ -11,7 +12,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up ROM source directory
       run: mkdir -p YOUR_ROM_SOURCE
@@ -36,7 +37,8 @@ jobs:
         tar -czf YOUR_ROM_SOURCE.tar.gz YOUR_ROM_SOURCE
 
     - name: Upload ROM source to repository
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: YOUR_ROM_SOURCE
         path: YOUR_ROM_SOURCE.tar.gz
+EOF
