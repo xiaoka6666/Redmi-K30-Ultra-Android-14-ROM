@@ -30,6 +30,7 @@ jobs:
         export PATH=$HOME/.bin:$PATH
         cd YOUR_ROM_SOURCE
         repo init -u https://android.googlesource.com/platform/manifest -b android-14.0.0_r54 --git-lfs --depth=1
+        repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
     - name: Archive ROM source
       run: |
