@@ -1,0 +1,35 @@
+stages:
+  - build
+
+build_rom:
+  stage: build
+  image: ubuntu:latest
+  before_script:
+    - apt-get update
+    - apt-get install -y openjdk-8-jdk git-core gnupg flex bison gperf libsdl1.2-dev libesd0-dev libwxgtk3.0-gtk3-dev squashfs-tools build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev ccache libgl1-mesa-dev libxml2-utils xsltproc unzip fontconfig
+  script:
+    - export ROM_SOURCE=~/rom
+    - export DEVICE=cezanne
+    - export BRANCH=14.0
+    - export GIT_DEPTH=1
+    - mkdir -p ${ROM_SOURCE}
+    - cd ${ROM_SOURCE}
+    - repo init -u https://github.com/crdroidandroid/android.git -b ${BRANCH} --git-lfs --depth=${GIT_DEPTH}
+    - repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+    - git clone https://github.com/xiaomi-mt6885-devs/android_device_xiaomi_cezanne-old -b crd-14-qpr2 --single-branch --depth=1 device/xiaomi/cezanne
+    - git clone https://github.com/xiaomi-mt6885-devs/android_kernel_xiaomi_mt6885.git -b cgroup-v2 --single-branch --depth=1 kernel/xiaomi/mt6885
+    - git clone https://github.com/xiaomi-mt6885-devs/android_hardware_mediatek -b ${BRANCH} hardware/mediatek
+    - git clone https://github.com/xiaomi-mt6885-devs/android_device_mediatek_sepolicy_vndr -b arrow-14.0 --single-branch device/mediatek/sepolicy_vndr
+    - wget -O MiuiCamera.apk https://onedrive.live.com/download?cid=5A43C412343CDA85&id=5A43C412343CDA85%21se8ce2449639945618af8d0d0106cd011
+    - mv MiuiCamera.apk ${ROM_SOURCE}/device/xiaomi/cezanne/MiuiCamera/system/priv-app/MiuiCamera.apk
+    - bash device/xiaomi/cezanne/extract-files.sh [12.5.11.0_DUMP_DIR]
+    - wget -qO- https://github.com/rams688/android_frameworks_av/commits/14/ | xargs -I {} git cherry-pick {}
+    - git fetch https://github.com/crdroidandroid/android_frameworks_base.git ${BRANCH} && git cherry-pick a80234d288074f67ee35bff5a828512964db7b89
+    - cd ${ROM_SOURCE}
+    - source build/envsetup.sh
+    - lunch lineage_ap1a-cezanne-user
+    - make bacon -j$(nproc --all)
+  artifacts:
+    paths:
+      - ${ROM_SOURCE}/out/target/product/cezanne/*.zip
+    expire_in: 1 week
