@@ -1,3 +1,4 @@
+echo "
 name: Sync AOSP Source
 
 on:
@@ -31,11 +32,6 @@ jobs:
         cd YOUR_ROM_SOURCE
         ~/.bin/repo init -u https://android.googlesource.com/platform/manifest -b android-14.0.0_r54 --git-lfs --depth=1
 
-    - name: Sync AOSP source
-      run: |
-        cd YOUR_ROM_SOURCE
-        ~/.bin/repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
-
     - name: Archive ROM source
       run: |
         tar -czf YOUR_ROM_SOURCE.tar.gz YOUR_ROM_SOURCE
@@ -45,3 +41,4 @@ jobs:
       with:
         name: YOUR_ROM_SOURCE
         path: YOUR_ROM_SOURCE.tar.gz
+" > .github/workflows/sync-aosp.yml
