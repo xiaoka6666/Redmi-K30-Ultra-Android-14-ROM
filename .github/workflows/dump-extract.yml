@@ -26,13 +26,17 @@ jobs:
 
     - name: Download Dumpyara
       run: |
-        wget https://bn.d.miui.com/V14.0.5.0.SJNCNXM/miui_CEZANNE_V14.0.5.0.SJNCNXM_7ff0af0ef7_12.0.zip -O dumpyara.zip
+        wget https://github.com/sample/dumpyara/archive/refs/heads/main.zip -O dumpyara.zip
         unzip dumpyara.zip -d dumpyara
+
+    - name: Download ROM file
+      run: |
+        wget https://example.com/path/to/your/rom.zip -O rom.zip
 
     - name: Extract ROM file
       run: |
         mkdir rom
-        unzip /path/to/your/rom.zip -d rom
+        unzip rom.zip -d rom
 
     - name: Run Dumpyara
       run: |
