@@ -3,7 +3,7 @@ name: DUMPYARA ROM DUMP Workflow
 on:
   push:
     branches:
-      - main  # 在推送到主分支时触发工作流，根据需要进行调整
+      - main
 
 jobs:
   dump_rom:
@@ -17,12 +17,11 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '11'
-          distribution: 'temurin'  # 或者 'zulu', 'temurin', 具体取决于您需要的发行版
-          java-package: 'jdk'           # 可选: 'jdk' 或 'jre'
-          architecture: 'x64'          # 可选: 'x64' 或 'x32'
+          distribution: 'temurin'  # 或 'zulu'，根据您的需求选择一个
+          java-package: 'jdk'
+          architecture: 'x64'
           check-latest: false
           server-id: github
-          server-username: ${{ secrets.GITHUB_ACTOR }}
           server-password: ${{ secrets.GITHUB_TOKEN }}
           overwrite-settings: true
           job-status: success
