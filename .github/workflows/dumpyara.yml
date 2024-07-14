@@ -17,7 +17,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '11'
-          distribution: 'adoptopenjdk'  # 或者 'zulu', 'temurin', 具体取决于您需要的发行版
+          distribution: 'temurin'  # 或者 'zulu', 'temurin', 具体取决于您需要的发行版
           java-package: 'jdk'           # 可选: 'jdk' 或 'jre'
           architecture: 'x64'          # 可选: 'x64' 或 'x32'
           check-latest: false
