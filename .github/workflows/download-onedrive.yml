@@ -29,7 +29,7 @@ jobs:
         DIRECT_DOWNLOAD_LINK: ${{ steps.generate_link.outputs.link }}
       run: |
         mkdir -p downloaded_files
-        wget "$DIRECT_DOWNLOAD_LINK" -O downloaded_files/filename.ext
+        wget "$DIRECT_DOWNLOAD_LINK" -O downloaded_files/MiuiCamera.apk
 
     - name: Add and commit files
       run: |
