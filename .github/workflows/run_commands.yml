@@ -1,0 +1,31 @@
+name: Run ROM Source Commands and Upload to GitHub
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Create and change to ROM source directory
+      run: mkdir YOUR_ROM_SOURCE && cd YOUR_ROM_SOURCE
+
+    - name: Clone hardware mediatek repository
+      run: |
+        cd YOUR_ROM_SOURCE
+        git clone https://github.com/xiaomi-mt6885-devs/android_hardware_mediatek -b fourteen hardware/mediatek
+
+    - name: Upload ROM Source Directory
+      uses: actions/upload-artifact@v3
+      with:
+        name: rom-source
+        path: YOUR_ROM_SOURCE
