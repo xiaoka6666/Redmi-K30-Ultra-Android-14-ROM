@@ -1,0 +1,36 @@
+name: DUMPYARA ROM DUMP Workflow
+
+on:
+  push:
+    branches:
+      - main  # 在推送到主分支时触发工作流，根据需要进行调整
+
+jobs:
+  dump_rom:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+
+      - name: Download and Install DUMPYARA
+        run: |
+          git clone https://github.com/AndroidDumps/dumpyara.git
+          cd dumpyara
+          bash setup.sh  # 根据实际设置要求调整安装命令
+
+      - name: Dump ROM
+        run: |
+          bash dumpyara.sh "https://bn.d.miui.com/V14.0.5.0.SJNCNXM/miui_CEZANNE_V14.0.5.0.SJNCNXM_7ff0af0ef7_12.0.zip" ${{ secrets.GITHUB_TOKEN }} rom-dumps
+          # 替换 <OTAlink> 或 <OTA file path> 为实际的 ROM 源，确保正确使用 GitHub token，并设置输出目录为 rom-dumps
+
+      - name: Upload DUMP Directory
+        uses: actions/upload-artifact@v2
+        with:
+          name: dumped-rom
+          path: rom-dumps  # 替换为实际的输出目录路径，这里是示例中的 rom-dumps
