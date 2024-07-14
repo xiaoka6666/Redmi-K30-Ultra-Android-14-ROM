@@ -34,6 +34,7 @@ jobs:
 
       - name: Dump ROM
         run: |
+          cd dumpyara
           bash dumpyara.sh "https://bn.d.miui.com/V14.0.5.0.SJNCNXM/miui_CEZANNE_V14.0.5.0.SJNCNXM_7ff0af0ef7_12.0.zip" ${{ secrets.MY_GITHUB_TOKEN }} rom-dumps
           # 替换 <OTAlink> 或 <OTA file path> 为实际的 ROM 源，确保正确使用 GitHub token，并设置输出目录为 rom-dumps
 
