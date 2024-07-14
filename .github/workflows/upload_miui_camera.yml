@@ -28,11 +28,12 @@ jobs:
           TAG_NAME="miui-camera-$(date +'%Y%m%d%H%M%S')"
           git tag $TAG_NAME
           git push origin $TAG_NAME
+        outputs:
+          TAG_NAME: $TAG_NAME
 
-      - name: 上传 MiuiCamera.apk 到 GitHub Releases
+      - name: 创建 GitHub Release 并上传 MiuiCamera.apk
         uses: softprops/action-gh-release@v1
         with:
           files: MiuiCamera.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        tag_name: ${{ steps.create_tag.outputs.TAG_NAME }}
