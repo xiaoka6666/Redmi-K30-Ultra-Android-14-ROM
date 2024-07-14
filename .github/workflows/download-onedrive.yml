@@ -1,0 +1,29 @@
+name: Download OneDrive File
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Download OneDrive file
+      env:
+        ONEDRIVE_LINK: 'https://onedrive.live.com/?cid=5A43C412343CDA85&id=5A43C412343CDA85%21se8ce2449639945618af8d0d0106cd011&parId=root&o=OneUp' # 替换为你的OneDrive文件链接
+      run: |
+        mkdir -p downloaded_files
+        wget "$ONEDRIVE_LINK" -O downloaded_files/filename.ext # 替换filename.ext为实际的文件名和扩展名
+
+    - name: Add and commit files
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+        git add downloaded_files
+        git commit -m 'Add downloaded file from OneDrive'
+        git push
