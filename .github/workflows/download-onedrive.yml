@@ -13,12 +13,23 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Generate OneDrive direct download link
+      id: generate_link
+      run: |
+        # 原始OneDrive分享链接
+        ONEDRIVE_SHARE_LINK='https://onedrive.live.com/?cid=5A43C412343CDA85&id=5A43C412343CDA85%21se8ce2449639945618af8d0d0106cd011&parId=root&o=OneUp'
+        # 提取文件ID
+        FILE_ID=$(echo $ONEDRIVE_SHARE_LINK | grep -oP '(?<=id=)[^&]*')
+        # 生成直接下载链接
+        DIRECT_DOWNLOAD_LINK="https://onedrive.live.com/download?resid=$FILE_ID"
+        echo "::set-output name=link::$DIRECT_DOWNLOAD_LINK"
+
     - name: Download OneDrive file
       env:
-        ONEDRIVE_LINK: 'https://onedrive.live.com/download?cid=5A43C412343CDA85&resid=5A43C412343CDA85%211se8ce2449639945618af8d0d0106cd011&authkey=ADlqsqUM-Sq9yTY' # 替换为你的OneDrive文件链接
+        DIRECT_DOWNLOAD_LINK: ${{ steps.generate_link.outputs.link }}
       run: |
         mkdir -p downloaded_files
-        wget "$ONEDRIVE_LINK" -O downloaded_files/filename.ext # 替换filename.ext为实际的文件名和扩展名
+        wget "$DIRECT_DOWNLOAD_LINK" -O downloaded_files/filename.ext
 
     - name: Add and commit files
       run: |
