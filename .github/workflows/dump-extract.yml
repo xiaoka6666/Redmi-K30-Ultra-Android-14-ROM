@@ -31,7 +31,7 @@ jobs:
 
     - name: Download ROM file
       run: |
-        wget https://example.com/path/to/your/rom.zip -O rom.zip
+        wget https://bn.d.miui.com/V14.0.5.0.SJNCNXM/miui_CEZANNE_V14.0.5.0.SJNCNXM_7ff0af0ef7_12.0.zip -O rom.zip
 
     - name: Extract ROM file
       run: |
