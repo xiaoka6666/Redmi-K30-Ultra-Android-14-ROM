@@ -34,7 +34,7 @@ jobs:
         mkdir -p YOUR_ROM_SOURCE
         cd YOUR_ROM_SOURCE
         repo init -u https://github.com/crdroidandroid/android.git -b 14.0 --git-lfs --depth=1
-      
+        repo sync
 
     - name: Archive YOUR_ROM_SOURCE directory
       run: |
