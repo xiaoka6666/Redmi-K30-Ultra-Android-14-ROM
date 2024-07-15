@@ -1,0 +1,48 @@
+name: AOSP Repo Sync and Upload
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  sync-and-upload:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+
+    - name: Install Repo Tool
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y repo git-lfs
+
+    - name: Initialize and sync repo
+      run: |
+        mkdir -p YOUR_ROM_SOURCE
+        cd YOUR_ROM_SOURCE
+        repo init -u https://github.com/crdroidandroid/android.git -b 14.0 --git-lfs --depth=1
+      
+
+    - name: Archive YOUR_ROM_SOURCE directory
+      run: |
+        cd YOUR_ROM_SOURCE
+        tar -czf ../YOUR_ROM_SOURCE.tar.gz .
+
+    - name: Upload YOUR_ROM_SOURCE archive
+      uses: actions/upload-artifact@v3
+      with:
+        name: YOUR_ROM_SOURCE
+        path: YOUR_ROM_SOURCE.tar.gz
