@@ -22,7 +22,13 @@ jobs:
     - name: Install required packages
       run: |
         sudo apt-get update
-        sudo apt-get install -y git-lfs
+        sudo apt-get install -y git-lfs curl
+
+    - name: Install repo tool
+      run: |
+        curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+        chmod a+x ~/bin/repo
+        export PATH=~/bin:$PATH
 
     - name: Initialize repo
       run: |
@@ -45,7 +51,7 @@ jobs:
       run: |
         cd YOUR_ROM_SOURCE
         git init
-        git remote add origin https://github.com/xiaoka6666/Redmi-K30-Ultra-Android-14-ROM.git
+        git remote add origin https://github.com/<your-username>/<your-repo>.git
         git checkout -b rom-source
         git add .
         git commit -m "Upload ROM source"
