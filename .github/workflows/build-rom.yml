@@ -41,18 +41,25 @@ jobs:
     - name: Sync repo
       run: |
         cd YOUR_ROM_SOURCE
-        ~/bin/repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+        ~/bin/repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags --depth=1
 
     - name: Configure Git
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
+    - name: Clean up
+      run: |
+        sudo apt-get clean
+        sudo rm -rf /var/lib/apt/lists/*
+        sudo rm -rf /tmp/*
+        sudo rm -rf /var/tmp/*
+
     - name: Commit and Push ROM Source
       run: |
         cd YOUR_ROM_SOURCE
         git init
-        git remote add origin https://github.com/<your-username>/<your-repo>.git
+        git remote add origin https://github.com/xiaoka6666/Redmi-K30-Ultra-Android-14-ROM.git
         git checkout -b rom-source
         git add .
         git commit -m "Upload ROM source"
