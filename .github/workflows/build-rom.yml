@@ -1,0 +1,54 @@
+name: Build and Upload ROM
+
+on:
+  push:
+    branches:
+      - main  # 或者你想触发工作流的其他分支
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v2
+
+    - name: Set up Java
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'adopt'
+        java-version: '11'
+        
+    - name: Install required packages
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y git-lfs
+
+    - name: Initialize repo
+      run: |
+        mkdir YOUR_ROM_SOURCE
+        cd YOUR_ROM_SOURCE
+        git lfs install
+        repo init -u https://github.com/crdroidandroid/android.git -b 14.0 --git-lfs --depth=1
+
+    - name: Sync repo
+      run: |
+        cd YOUR_ROM_SOURCE
+        repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+
+    - name: Configure Git
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+    - name: Commit and Push ROM Source
+      run: |
+        cd YOUR_ROM_SOURCE
+        git init
+        git remote add origin https://github.com/xiaoka6666/Redmi-K30-Ultra-Android-14-ROM.git
+        git checkout -b rom-source
+        git add .
+        git commit -m "Upload ROM source"
+        git push origin rom-source --force
+      env:
+        TOKEN: ${{ secrets.TOKEN }}
