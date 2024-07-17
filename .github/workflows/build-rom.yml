@@ -18,11 +18,18 @@ jobs:
       with:
         distribution: 'adopt'
         java-version: '11'
-        
+
     - name: Install required packages
       run: |
         sudo apt-get update
         sudo apt-get install -y git-lfs curl
+
+    - name: Clean up before initializing repo
+      run: |
+        sudo apt-get clean
+        sudo rm -rf /var/lib/apt/lists/*
+        sudo rm -rf /tmp/*
+        sudo rm -rf /var/tmp/*
 
     - name: Create bin directory and install repo tool
       run: |
@@ -41,19 +48,12 @@ jobs:
     - name: Sync repo
       run: |
         cd YOUR_ROM_SOURCE
-        ~/bin/repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags --depth=1
+        ~/bin/repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
     - name: Configure Git
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-
-    - name: Clean up
-      run: |
-        sudo apt-get clean
-        sudo rm -rf /var/lib/apt/lists/*
-        sudo rm -rf /tmp/*
-        sudo rm -rf /var/tmp/*
 
     - name: Commit and Push ROM Source
       run: |
