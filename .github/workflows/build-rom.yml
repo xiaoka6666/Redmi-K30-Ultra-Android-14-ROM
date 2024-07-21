@@ -27,9 +27,15 @@ jobs:
     - name: Clean up before initializing repo
       run: |
         sudo apt-get clean
+        sudo apt-get autoremove -y
         sudo rm -rf /var/lib/apt/lists/*
         sudo rm -rf /tmp/*
         sudo rm -rf /var/tmp/*
+        sudo rm -rf /usr/share/man/*
+        sudo rm -rf /usr/share/doc/*
+        sudo rm -rf /usr/share/locale/*
+        sudo rm -rf /var/cache/apt/archives/*
+        sudo find / -type f -name "*.log" -exec rm -f {} \;
 
     - name: Create bin directory and install repo tool
       run: |
