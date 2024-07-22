@@ -10,6 +10,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Clean up before starting
+      run: |
+        sudo apt-get clean
+        sudo apt-get autoremove -y
+        sudo rm -rf /var/lib/apt/lists/*
+        sudo rm -rf /tmp/*
+        sudo rm -rf /var/tmp/*
+        sudo rm -rf /usr/share/man/*
+        sudo rm -rf /usr/share/doc/*
+        sudo rm -rf /usr/share/locale/*
+        sudo rm -rf /var/cache/apt/archives/*
+        sudo find / -type f -name "*.log" -exec rm -f {} \;
+
     - name: Checkout source code
       uses: actions/checkout@v2
 
@@ -24,7 +37,26 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y git-lfs curl
 
-    - name: Clean up before initializing repo
+    - name: Create bin directory and install repo tool
+      run: |
+        mkdir -p ~/bin
+        curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+        chmod a+x ~/bin/repo
+        echo 'export PATH=$HOME/bin:$PATH' >> $GITHUB_ENV
+
+    - name: Initialize repo
+      run: |
+        mkdir -p YOUR_ROM_SOURCE
+        cd YOUR_ROM_SOURCE
+        git lfs install
+        ~/bin/repo init -u https://github.com/crdroidandroid/android.git -b 14.0 --git-lfs --depth=1
+
+    - name: Sync repo
+      run: |
+        cd YOUR_ROM_SOURCE
+        ~/bin/repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+
+    - name: Clean up after sync
       run: |
         sudo apt-get clean
         sudo apt-get autoremove -y
@@ -36,25 +68,6 @@ jobs:
         sudo rm -rf /usr/share/locale/*
         sudo rm -rf /var/cache/apt/archives/*
         sudo find / -type f -name "*.log" -exec rm -f {} \;
-
-    - name: Create bin directory and install repo tool
-      run: |
-        mkdir -p ~/bin
-        curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
-        chmod a+x ~/bin/repo
-        echo 'export PATH=$HOME/bin:$PATH' >> $GITHUB_ENV
-
-    - name: Initialize repo
-      run: |
-        mkdir YOUR_ROM_SOURCE
-        cd YOUR_ROM_SOURCE
-        git lfs install
-        ~/bin/repo init -u https://github.com/crdroidandroid/android.git -b 14.0 --git-lfs --depth=1
-
-    - name: Sync repo
-      run: |
-        cd YOUR_ROM_SOURCE
-        ~/bin/repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
     - name: Configure Git
       run: |
