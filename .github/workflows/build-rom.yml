@@ -49,7 +49,7 @@ jobs:
         mkdir -p YOUR_ROM_SOURCE
         cd YOUR_ROM_SOURCE
         git lfs install
-        ~/bin/repo init -u https://mirrors.tuna.tsinghua.edu.cn/git/AOSP/platform/manifest -b twrp-12.1 --depth=1
+        ~/bin/repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1 --depth=1
 
     - name: Sync repo
       run: |
